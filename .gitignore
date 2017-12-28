@@ -1,0 +1,14 @@
+bin/*
+temp/*
+*.m~
+*.dat
+.DS_Store
+*.sw*
+.mypy_cache/*
+*egg-info/*
+build/*
+.mypy_cache/*
+.mypy_cache/
+__pycache__/*
+
+

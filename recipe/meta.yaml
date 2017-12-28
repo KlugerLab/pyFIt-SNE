@@ -1,0 +1,46 @@
+{% set name = "fitsne" %}
+{% set version = "0.1.0" %}
+{% set sha256 = "TODO" %}
+# Get the sha256 by openssl sha256 <file name> (install sha256 by conda install openssl -c conda-forge)
+# file is the one dowloaded from PyPI https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+
+build:
+  number: 0
+  skip: True  # [win]
+  script: python setup.py install --single-version-externally-managed --record record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - cython
+  run:
+    - python
+    - numpy
+
+test:
+  imports:
+    - fitsne
+
+
+about:
+  home: https://github.com/KlugerLab/pyFIt-SNE
+  license: BSD-2-Clause
+  license_family: BSD
+  license_file: LICENSE  # https://github.com/conda-forge/staged-recipes/issues/4277
+  summary: 'Python Wrapper for FIt-SNE'
+  # doc_url: http://loompy.org
+  dev_url: https://github.com/KlugerLab
+
+extra:
+  recipe-maintainers:
+    - gioelelm

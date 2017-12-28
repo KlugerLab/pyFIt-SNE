@@ -1,0 +1,3 @@
+include fitsne/*.pyx
+include fitsne/src/*
+include LICENSE
