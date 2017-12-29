@@ -43,7 +43,7 @@ Installation
 ------------
 The only prerequisite is `FFTW <http://www.fftw.org/>`__. FFTW and fitsne can be installed as follows:
 
-.. code:: python
+.. code:: bash
    
    conda config --add channels conda-forge #if not already in your channels. Needed for fftw.
    conda install cython numpy fftw  
