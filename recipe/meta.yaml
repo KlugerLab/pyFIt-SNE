@@ -23,6 +23,7 @@ requirements:
     - python
     - setuptools
     - cython
+    - fftw
   run:
     - python
     - numpy
