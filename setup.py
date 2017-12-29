@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages  # from distutils.core import setup
 from setuptools.extension import Extension
 from Cython.Build import cythonize
+from os import path
 
 
 extensions = [Extension("fitsne.cppwrap",
@@ -11,6 +12,9 @@ extensions = [Extension("fitsne.cppwrap",
                         extra_link_args=['-lfftw3', '-lm'])]
 extensions = cythonize(extensions, language="c++",  include_path=[])
 
+here = path.abspath(path.dirname(__file__))
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 # package_data = {}
 __version__ = "0.0.0"
@@ -23,10 +27,11 @@ setup(name="fitsne",
       ext_modules=extensions,
       # package_data=package_data,
       # metadata
-      author="TODO", # TODO
-      author_email="TODO", # TODO
-      url="https://github.com/KlugerLab/pyFIt-SNE",
+      author="George Linderman, Gioele La Manno", 
+      author_email="george.linderman@gmail.com, gioelelamanno@gmail.com", 
+      url="https://github.com/KlugerLab/FIt-SNE",
       download_url=f"https://github.com/KlugerLab/pyFIt-SNE/archive/{__version__}.tar.gz",
       keywords=["tSNE", "embedding"],
-      description="TODO", # TODO
-      license="BSD2") # TODO
+      description="Fast Fourier Transform-accelerated Interpolation-based t-SNE (FIt-SNE)", 
+      long_description=long_description,
+      license="BSD3") 
