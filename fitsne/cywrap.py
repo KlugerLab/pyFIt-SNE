@@ -4,7 +4,7 @@ import numpy as np
 
 def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0.5, rand_seed: int=-1,
            max_iter: int=1000, stop_lying_iter: int=200, 
-           fft_not_bh: bool=False, ann_not_vptree: bool=False, early_exag_coeff: float=12.0,
+           fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
            no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1) -> np.ndarray:
     """
     Wrapper around the Linderman et al. 2017 FItSNE C implementation
@@ -69,6 +69,7 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
     else:
         knn_algo = 2
 
+    print ("nbody_algo", nbody_algo)
     # memory allocations
     Y = np.zeros((N, no_dims), dtype="double")
     costs = np.zeros(max_iter, dtype="double")

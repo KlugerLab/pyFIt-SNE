@@ -18,12 +18,12 @@ def _TSNErun(double[:, ::1] X, int N, int D, double[:, ::1] Y, int no_dims, doub
 
     cdef:
         bool skip_random_init_b = <bool>skip_random_init
-        bool nbody_algo_b = <bool>nbody_algo
+        bool no_momentum_during_exag_b = <bool>no_momentum_during_exag
         double initialError
     try:
         tsne_obj.run(&X[0, 0], N, D, &Y[0, 0], no_dims, perplexity, theta, rand_seed,
                      skip_random_init_b, max_iter, stop_lying_iter, mom_switch_iter, K, sigma,
-                     nbody_algo_b, knn_algo, early_exag_coeff, &initialError, &costs[0],
-                     no_momentum_during_exag, start_late_exag_iter, late_exag_coeff, n_trees, search_k)
+                     nbody_algo, knn_algo, early_exag_coeff, &initialError, &costs[0],
+                     no_momentum_during_exag_b, start_late_exag_iter, late_exag_coeff, n_trees, search_k)
     finally:
         del tsne_obj
