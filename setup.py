@@ -55,16 +55,16 @@ except:
                             extra_link_args=['-lfftw3', '-lm'])]
     extensions = cythonize(extensions, language="c++",  include_path=[])
 
-setup(name="fitsne",
-      version=__version__,
-      packages=find_packages(),
-      install_requires=['numpy', 'cython'],
-      ext_modules=extensions,
-      author=author, 
-      author_email=author_email, 
-      url=url,
-      download_url=download_url,
-      keywords=keywords,
-      description=description, 
-      long_description=long_description,
-      license=license) 
+    setup(name="fitsne",
+          version=__version__,
+          packages=find_packages(),
+          install_requires=['numpy', 'cython'],
+          ext_modules=extensions,
+          author=author, 
+          author_email=author_email, 
+          url=url,
+          download_url=download_url,
+          keywords=keywords,
+          description=description, 
+          long_description=long_description,
+          license=license) 
