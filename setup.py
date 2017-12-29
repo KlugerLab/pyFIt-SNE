@@ -29,7 +29,7 @@ setup(name="fitsne",
       # metadata
       author="George Linderman, Gioele La Manno", 
       author_email="george.linderman@gmail.com, gioelelamanno@gmail.com", 
-      url="https://github.com/KlugerLab/FIt-SNE",
+      url="https://github.com/KlugerLab/pyFIt-SNE",
       download_url=f"https://github.com/KlugerLab/pyFIt-SNE/archive/{__version__}.tar.gz",
       keywords=["tSNE", "embedding"],
       description="Fast Fourier Transform-accelerated Interpolation-based t-SNE (FIt-SNE)", 
