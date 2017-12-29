@@ -7,9 +7,6 @@ Y = fitsne.FItSNE(X, fft_not_bh=True, ann_not_vptree=True)
 #Y = fitsne.FItSNE(X, fft_not_bh=False, ann_not_vptree=False) #Test the barnes-hut
 
 
-try:
-    import matplotlib.pyplot as plt
-    plt.scatter(Y[:, 0], Y[:, 1])
-    plt.show()
-except ImportError:
-    print("Not plotting, because matplotlib is not installed")
+#import matplotlib.pyplot as plt
+#plt.scatter(Y[:, 0], Y[:, 1])
+#plt.show()

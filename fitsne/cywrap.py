@@ -69,7 +69,6 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
     else:
         knn_algo = 2
 
-    print ("nbody_algo", nbody_algo)
     # memory allocations
     Y = np.zeros((N, no_dims), dtype="double")
     costs = np.zeros(max_iter, dtype="double")
