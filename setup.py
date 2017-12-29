@@ -55,6 +55,7 @@ except:
                             extra_link_args=['-lfftw3', '-lm'])]
     extensions = cythonize(extensions, language="c++",  include_path=[])
 
+<<<<<<< HEAD
     setup(name="fitsne",
           version=__version__,
           packages=find_packages(),
@@ -68,3 +69,20 @@ except:
           description=description, 
           long_description=long_description,
           license=license) 
+=======
+setup(name="fitsne",
+      version=__version__,
+      packages=find_packages(),
+      install_requires=['numpy', 'cython'],
+      ext_modules=extensions,
+      # package_data=package_data,
+      # metadata
+      author="George Linderman, Gioele La Manno", 
+      author_email="george.linderman@gmail.com, gioelelamanno@gmail.com", 
+      url="https://github.com/KlugerLab/pyFIt-SNE",
+      download_url=f"https://github.com/KlugerLab/pyFIt-SNE/archive/{__version__}.tar.gz",
+      keywords=["tSNE", "embedding"],
+      description="Fast Fourier Transform-accelerated Interpolation-based t-SNE (FIt-SNE)", 
+      long_description=long_description,
+      license="BSD3") 
+>>>>>>> d3e51682a5679f46eca4213d48013de125627d65
