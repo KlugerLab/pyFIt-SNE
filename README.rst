@@ -12,6 +12,13 @@ dimensional datasets. A popular
 the Barnes-Hut algorithm to approximate the gradient at each iteration
 of gradient descent. We modified this implementation as follows:
 
+-  Computation of the N-body Simulation: Instead of approximating the
+   N-body simulation using Barnes-Hut, we interpolate onto an equispaced
+   grid and use FFT to perform the convolution, dramatically reducing
+   the time to compute the gradient at each iteration of gradient
+   descent. See `this
+   <http://gauss.math.yale.edu/~gcl22/blog/numerics/low-rank/t-sne/2018/01/11/low-rank-kernels.html>`__
+   post for some intuition on how it works.
 -  Computation of Input Similiarities: Instead of computing nearest
    neighbors using vantage-point trees, we approximate nearest neighbors
    using the `Annoy <https://github.com/spotify/annoy>`__ library. The
@@ -20,11 +27,6 @@ of gradient descent. We modified this implementation as follows:
    "nearest" neighbors is faster, but also has a smoothing effect, which
    can be useful for embedding some datasets (see `Linderman et al.
    (2017) <https://arxiv.org/abs/1711.04712>`__).
--  Computation of the N-body Simulation: Instead of approximating the
-   N-body simulation using Barnes-Hut, we interpolate onto an equispaced
-   grid and use FFT to perform the convolution, dramatically reducing
-   the time to compute the gradient at each iteration of gradient
-   descent.
 -  Early exaggeration: In `Linderman and Steinerberger
    (2017) <https://arxiv.org/abs/1706.02582>`__, we showed that
    appropriately choosing the early exaggeration coefficient can lead to
