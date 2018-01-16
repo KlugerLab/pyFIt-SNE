@@ -5,7 +5,8 @@ import numpy as np
 def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0.5, rand_seed: int=-1,
            max_iter: int=1000, stop_lying_iter: int=200, 
            fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
-           no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1) -> np.ndarray:
+           no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1,
+           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50) -> np.ndarray:
     """
     Wrapper around the Linderman et al. 2017 FItSNE C implementation
 
@@ -45,6 +46,18 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
         ANNOY parameter
     search_k: int, default=-1
         ANNOY parameter
+    nterms: int, default=3 
+        If using FIt-SNE, this is the number of interpolation points per
+        sub-interval
+   intervals_per_integer: float, default=1 
+        See min_num_intervals
+   min_num_intervals: int, default=50
+        Let maxloc = ceil(max(max(X))) and minloc = floor(min(min(X))). i.e.
+        the points are in a [minloc]^no_dims by [maxloc]^no_dims
+        interval/square.  The number of intervals in each dimension is either
+        min_num_intervals or ceil((maxloc -minloc)/opts.intervals_per_integer), 
+        whichever is larger.  opts.min_num_intervals must be an integer >0, and
+        opts.intervals_per_integer must be >0.
 
     Returns
     -------
@@ -76,6 +89,7 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
     _TSNErun(X, N, D, Y, no_dims, perplexity, theta, rand_seed,
              skip_random_init, max_iter, stop_lying_iter, mom_switch_iter, K, sigma,
              nbody_algo, knn_algo, early_exag_coeff, costs, no_momentum_during_exag_i,
-             start_late_exag_iter, late_exag_coeff, n_trees, search_k)
+             start_late_exag_iter, late_exag_coeff, n_trees, search_k, 
+             nterms, intervals_per_integer, min_num_intervals)
 
     return Y
