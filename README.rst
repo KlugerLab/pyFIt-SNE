@@ -26,7 +26,9 @@ of gradient descent. We modified this implementation as follows:
    multiple cores. Using "near" neighbors as opposed to strictly
    "nearest" neighbors is faster, but also has a smoothing effect, which
    can be useful for embedding some datasets (see `Linderman et al.
-   (2017) <https://arxiv.org/abs/1711.04712>`__).
+   (2017) <https://arxiv.org/abs/1711.04712>`__). If subtle detail is required
+   (e.g. in identifying small clusters), then use vantage-point trees (which is
+   also multithreaded in this implementation). 
 -  Early exaggeration: In `Linderman and Steinerberger
    (2017) <https://arxiv.org/abs/1706.02582>`__, we showed that
    appropriately choosing the early exaggeration coefficient can lead to

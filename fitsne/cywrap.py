@@ -6,7 +6,7 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
            max_iter: int=1000, stop_lying_iter: int=200, 
            fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
            no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1,
-           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50) -> np.ndarray:
+           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50, nthreads:  int=0) -> np.ndarray:
     """
     Wrapper around the Linderman et al. 2017 FItSNE C implementation
 
@@ -58,6 +58,10 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
         min_num_intervals or ceil((maxloc -minloc)/opts.intervals_per_integer), 
         whichever is larger.  opts.min_num_intervals must be an integer >0, and
         opts.intervals_per_integer must be >0.
+   nthreads: unsigned int, default=0 
+       Number of threads to be used in computation of input similarities (both
+       for vptrees and ann). 0 uses the maximum number of threads supported by
+       the hardware.
 
     Returns
     -------
@@ -90,6 +94,6 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
              skip_random_init, max_iter, stop_lying_iter, mom_switch_iter, K, sigma,
              nbody_algo, knn_algo, early_exag_coeff, costs, no_momentum_during_exag_i,
              start_late_exag_iter, late_exag_coeff, n_trees, search_k, 
-             nterms, intervals_per_integer, min_num_intervals)
+             nterms, intervals_per_integer, min_num_intervals,nthreads)
 
     return Y
