@@ -55,6 +55,10 @@ The only prerequisite is `FFTW <http://www.fftw.org/>`__. FFTW and fitsne can be
 
 And you're good to go!
 
+Bug reports, feature requests, etc.
+-------------------------------------
+If you have any problems with this package, please open an issue on the Github `repository <https://github.com/KlugerLab/pyFIt-SNE>`__.
+
 References
 ----------
 
