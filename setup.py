@@ -13,13 +13,13 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 author="George Linderman, Gioele La Manno"
 author_email="george.linderman@gmail.com, gioelelamanno@gmail.com"
 url="https://github.com/KlugerLab/FIt-SNE"
-download_url=f"https://github.com/KlugerLab/pyFIt-SNE/archive/{__version__}.tar.gz"
+download_url="https://github.com/KlugerLab/pyFIt-SNE/archive/{}.tar.gz".format(__version__)
 keywords=["tSNE", "embedding"]
 description="Fast Fourier Transform-accelerated Interpolation-based t-SNE (FIt-SNE)"
 license="BSD3"
 
 #Try...except because for some OS X setups, the compilation fails without -stdlib=libc++
-try: 
+try:
     extensions = [Extension("fitsne.cppwrap",
                             ["fitsne/cppwrap.pyx", "fitsne/src/nbodyfft.cpp", "fitsne/src/sptree.cpp", "fitsne/src/tsne.cpp"],
                             language="c++",
@@ -38,14 +38,14 @@ try:
           ext_modules=extensions,
           # package_data=package_data,
           # metadata
-          author=author, 
-          author_email=author_email, 
+          author=author,
+          author_email=author_email,
           url=url,
           download_url=download_url,
           keywords=keywords,
-          description=description, 
+          description=description,
           long_description=long_description,
-          license=license) 
+          license=license)
 
 except:
     extensions = [Extension("fitsne.cppwrap",
@@ -60,11 +60,11 @@ except:
           packages=find_packages(),
           install_requires=['numpy', 'cython'],
           ext_modules=extensions,
-          author=author, 
-          author_email=author_email, 
+          author=author,
+          author_email=author_email,
           url=url,
           download_url=download_url,
           keywords=keywords,
-          description=description, 
+          description=description,
           long_description=long_description,
-          license=license) 
+          license=license)
