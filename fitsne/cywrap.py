@@ -2,7 +2,9 @@ from .cppwrap import _TSNErun
 import numpy as np
 
 
-def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0.5, rand_seed: int=-1,
+def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, 
+           sigma: float=-30.0, K: int=-1, initialization: np.ndarray=None,
+           theta: float=0.5, rand_seed: int=-1,
            max_iter: int=1000, stop_lying_iter: int=200, 
            fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
            no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1,
@@ -19,7 +21,13 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
     no_dims: int, default=2
         Dimensionality of the embedding
     perplexity: float, default=30.0
-        Perplexity is used to determine the bandwidth of the Gaussian kernel in the input space
+        Perplexity is used to determine the bandwidth of the Gaussian kernel in the input space. Set to -1 if using fixed sigma/K (see below)
+    sigma: float, default=-30
+        Fixed bandwidth of Gaussian kernel to use in lieu of the perplexity-based adaptive kernel width typically used in t-SNE
+    K: int, default=-1
+        Number of nearest neighbors to get when using fixed sigma in lieu of perplexity-based adaptive kernel width typically used in t-SNE
+    initialization: np.ndarray, shape (samples x no_dims), default=None
+        Initialization of the embedded points to use in lieu of the random initialization typically used in t-SNE
     theta: float, default=0.5
         Set to 0 for exact.  If non-zero, then will use either Barnes Hut or FIt-SNE based on `fft_not_bh`.
         If Barnes Hut, then this determines the accuracy of BH approximation.
@@ -69,12 +77,17 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
         The embedded dataset
     """
     N, D = X.shape
-    K = -1
-    sigma = -30.0
     mom_switch_iter = 250
     # booleans
-    skip_random_init = int(False)
     no_momentum_during_exag_i = int(no_momentum_during_exag)
+
+
+    if initialization is not None:
+        skip_random_init = int(True)
+        Y = initialization
+    else:
+        skip_random_init = int(False)
+        Y = np.zeros((N, no_dims), dtype="double")
 
     if fft_not_bh:
         nbody_algo = 2
@@ -87,7 +100,6 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, theta: float=0
         knn_algo = 2
 
     # memory allocations
-    Y = np.zeros((N, no_dims), dtype="double")
     costs = np.zeros(max_iter, dtype="double")
 
     _TSNErun(X, N, D, Y, no_dims, perplexity, theta, rand_seed,
