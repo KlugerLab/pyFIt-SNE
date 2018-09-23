@@ -8,7 +8,7 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
            max_iter: int=1000, stop_lying_iter: int=200, 
            fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
            no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1,
-           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50, nthreads:  int=0) -> np.ndarray:
+           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50,load_affinities: int=0, nthreads:  int=0) -> np.ndarray:
     """
     Wrapper around the Linderman et al. 2017 FItSNE C implementation
 
