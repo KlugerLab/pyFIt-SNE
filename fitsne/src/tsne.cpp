@@ -46,7 +46,7 @@
 #include "vptree.h"
 #include "sptree.h"
 #include "tsne.h"
-#include "progress_bar/ProgressBar.hpp"
+#include "ProgressBar.hpp"
 #include "parallel_for.h"
 #include "time_code.h"
 
