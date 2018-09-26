@@ -495,7 +495,9 @@ int TSNE::run(double *X, int N, int D, double *Y, int no_dims, double perplexity
         if (iter == mom_switch_iter) momentum = final_momentum;
 
         // Print out progress
-        if (iter > 0 && (iter % 50 == 0 || iter == max_iter - 1)) {
+        if ((iter+1) % 50 == 0 || iter == max_iter - 1) {
+	INITIALIZE_TIME;
+        START_TIME;
             double C = .0;
             if (exact) {
                 C = evaluateError(P, Y, N, no_dims);
@@ -517,10 +519,11 @@ int TSNE::run(double *X, int N, int D, double *Y, int no_dims, double perplexity
             }     
 
             costs[iter] = C;       
+    END_TIME("Computing Error");
             
             std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
             total_time += std::chrono::duration_cast<std::chrono::milliseconds>(now-start_time).count();
-            printf("Iteration %d (50 iterations in %.2f seconds), cost %f\n", iter, std::chrono::duration_cast<std::chrono::milliseconds>(now-start_time).count()/(float)1000.0, C);
+            printf("Iteration %d (50 iterations in %.2f seconds), cost %f\n", iter+1, std::chrono::duration_cast<std::chrono::milliseconds>(now-start_time).count()/(float)1000.0, C);
             start_time = std::chrono::steady_clock::now();
         }
     }
@@ -590,9 +593,6 @@ void TSNE::computeGradient(double *P, unsigned int *inp_row_P, unsigned int *inp
 void TSNE::computeFftGradientOneD(double *P, unsigned int *inp_row_P, unsigned int *inp_col_P, double *inp_val_P,
                                   double *Y, int N, int D, double *dC, int n_interpolation_points,
                                   double intervals_per_integer, int min_num_intervals, unsigned int nthreads) {
-    if (nthreads == 0) {
-        nthreads = std::thread::hardware_concurrency();
-    }
     // Zero out the gradient
     for (int i = 0; i < N * D; i++) dC[i] = 0.0;
 
@@ -658,36 +658,18 @@ void TSNE::computeFftGradientOneD(double *P, unsigned int *inp_row_P, unsigned i
 //    unsigned int ind2 = 0;
   double *pos_f = new double[N];
 
-    {
-        // Pre loop
-        std::vector<std::thread> threads(nthreads);
-        for (int t = 0; t < nthreads; t++) {
-            threads[t] = std::thread(std::bind(
-                    [&](const int bi, const int ei, const int t)
-                    {
-                        // loop over all items
-                        for(int n = bi;n<ei;n++)
-                        {
-                            // inner loop
-                            {
-                                double dim1 = 0;
-                                for (unsigned int i = inp_row_P[n]; i < inp_row_P[n + 1]; i++) {
-                                    // Compute pairwise distance and Q-value
-                                    unsigned int ind3 = inp_col_P[i];
-                                    double d_ij = Y[n] - Y[ind3];
-                                    double q_ij = 1 / (1 + d_ij * d_ij);
-                                    dim1 += inp_val_P[i] * q_ij * d_ij;
-                                }
-                                    pos_f[n] = dim1;
+        PARALLEL_FOR(nthreads, N, {
+            double dim1 = 0;
+            for (unsigned int i = inp_row_P[loop_i]; i < inp_row_P[loop_i + 1]; i++) {
+                // Compute pairwise distance and Q-value
+                unsigned int ind3 = inp_col_P[i];
+                double d_ij = Y[loop_i] - Y[ind3];
+                double q_ij = 1 / (1 + d_ij * d_ij);
+                dim1 += inp_val_P[i] * q_ij * d_ij;
+            }
+                pos_f[loop_i] = dim1;
 
-                            }
-                        }
-
-                    },t*N/nthreads,(t+1)==nthreads?N:(t+1)*N/nthreads,t));
-        }
-        std::for_each(threads.begin(),threads.end(),[](std::thread& x){x.join();});
-        // Post loop
-  }
+        });
 
 
 
@@ -714,10 +696,6 @@ void TSNE::computeFftGradient(double *P, unsigned int *inp_row_P, unsigned int *
                               int N, int D, double *dC, int n_interpolation_points, double intervals_per_integer,
                               int min_num_intervals, unsigned int nthreads) {
 
-
-    if (nthreads == 0) {
-        nthreads = std::thread::hardware_concurrency();
-    }
 
     // Zero out the gradient
     for (int i = 0; i < N * D; i++) dC[i] = 0.0;
@@ -1250,9 +1228,6 @@ int TSNE::computeGaussianPerplexity(double *X, int N, int D, unsigned int **_row
     }
     printf("Done building tree. Beginning nearest neighbor search... \n");
     ProgressBar bar(N,60);
-    if (nthreads == 0) {
-        nthreads = std::thread::hardware_concurrency();
-    }
     //const size_t nthreads = 1;
     {
         // Pre loop
@@ -1340,10 +1315,6 @@ void TSNE::computeGaussianPerplexity(double *X, int N, int D, unsigned int **_ro
 
     ProgressBar bar(N,60);
 
-
-    if (nthreads == 0) {
-        nthreads = std::thread::hardware_concurrency();
-    }
     //const size_t nthreads = 1;
     {
         // Pre loop
@@ -1735,6 +1706,9 @@ int main(int argc, char *argv[]) {
 	if(argc >= 4) {
 		nthreads = (unsigned int)strtoul(argv[3], (char **)NULL, 10);
 	}
+    if (nthreads == 0) {
+        nthreads = std::thread::hardware_concurrency();
+    }
 	std::cout<<"fast_tsne data_path: "<< data_path <<std::endl;
 	std::cout<<"fast_tsne result_path: "<< result_path <<std::endl;
 	std::cout<<"fast_tsne nthreads: "<< nthreads <<std::endl;
