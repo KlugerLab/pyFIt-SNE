@@ -5,9 +5,10 @@ import numpy as np
 def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0, 
            sigma: float=-30.0, K: int=-1, initialization: np.ndarray=None,
            theta: float=0.5, rand_seed: int=-1,
-           max_iter: int=1000, stop_lying_iter: int=200, 
+           max_iter: int=1000, stop_early_exag_iter: int=250, 
            fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
-           no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, n_trees: int=50, search_k: int=-1,
+           no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, 
+           mom_switch_iter: int=250,momentum: float=0.5, final_momentum: float=0.8, learning_rate: int=200, n_trees: int=50, search_k: int=-1,
            nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50,load_affinities: int=0, nthreads:  int=0) -> np.ndarray:
     """
     Wrapper around the Linderman et al. 2017 FItSNE C implementation
@@ -35,7 +36,7 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
         Random seed to get deterministic output
     max_iter: int, default=1000
         Number of iterations of t-SNE to run.
-    stop_lying_iter: int, default=200
+    stop_early_exag_iter: int, default=250
         When to switch off early exaggeration.
     fft_not_bh: bool, default=False
         If theta is nonzero, this determins whether to use FIt-SNE or Barnes Hut approximation. 
@@ -43,6 +44,14 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
         This determines whether to use aproximate (Annoy) or deterministic (vptree) nearest neighbours
     early_exag_coeff: float, default=12.0
         When to switch off early exaggeration. (>1)
+    mom_switch_iter: int, default=250
+        When to switch momentum
+    momentum: float, default=0.5
+        Size of momentum
+    final_momentum: float, default=0.7
+        Final momentum
+    learning_rate: int, default=200
+        Learning rate (step size)
     no_momentum_during_exag: bool=False
         Set to 0 to use momentum and other optimization tricks.
         1 to do plain, vanilla gradient descent (useful for testing large exaggeration coefficients)
@@ -77,7 +86,6 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
         The embedded dataset
     """
     N, D = X.shape
-    mom_switch_iter = 250
     # booleans
     no_momentum_during_exag_i = int(no_momentum_during_exag)
 
@@ -103,7 +111,8 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
     costs = np.zeros(max_iter, dtype="double")
 
     _TSNErun(X, N, D, Y, no_dims, perplexity, theta, rand_seed,
-             skip_random_init, max_iter, stop_lying_iter, mom_switch_iter, K, sigma,
+             skip_random_init, max_iter, stop_early_exag_iter, mom_switch_iter, 
+             momentum,final_momentum,learning_rate,K, sigma,
              nbody_algo, knn_algo, early_exag_coeff, costs, no_momentum_during_exag_i,
              start_late_exag_iter, late_exag_coeff, n_trees, search_k, 
              nterms, intervals_per_integer, min_num_intervals,nthreads)
