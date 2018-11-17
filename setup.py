@@ -3,6 +3,7 @@ from setuptools.extension import Extension
 from Cython.Build import cythonize
 from os import path
 from os import environ
+from sys import platform
 
 __version__ = "0.0.0"
 exec(open('fitsne/_version.py').read())
@@ -20,11 +21,18 @@ license="BSD3"
 
 #Try...except because for some OS X setups, the compilation fails without -stdlib=libc++
 try: 
-    extensions = [Extension("fitsne.cppwrap",
-                            ["fitsne/cppwrap.pyx", "fitsne/src/nbodyfft.cpp", "fitsne/src/sptree.cpp", "fitsne/src/tsne.cpp"],
-                            language="c++",
-                            extra_compile_args=["-std=c++11", "-O3", '-pthread', "-lfftw3", "-lm"],
-                            extra_link_args=['-lfftw3', '-lm'])]
+    if platform == "darwin":
+        extensions = [Extension("fitsne.cppwrap",
+                                ["fitsne/cppwrap.pyx", "fitsne/src/nbodyfft.cpp", "fitsne/src/sptree.cpp", "fitsne/src/tsne.cpp"],
+                                language="c++",
+                                extra_compile_args=["-std=c++11", "-O3", '-pthread', "-lfftw3", "-lm"],
+                                extra_link_args=['-lfftw3', '-lm',"-mmacosx-version-min=10.9"])]
+    else:
+        extensions = [Extension("fitsne.cppwrap",
+                                ["fitsne/cppwrap.pyx", "fitsne/src/nbodyfft.cpp", "fitsne/src/sptree.cpp", "fitsne/src/tsne.cpp"],
+                                language="c++",
+                                extra_compile_args=["-std=c++11", "-O3", '-pthread', "-lfftw3", "-lm"],
+                                extra_link_args=['-lfftw3', '-lm'])]
     extensions = cythonize(extensions, language="c++",  include_path=[])
 
     # package_data = {}
