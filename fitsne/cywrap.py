@@ -9,7 +9,7 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
            fft_not_bh: bool=True, ann_not_vptree: bool=True, early_exag_coeff: float=12.0,
            no_momentum_during_exag: bool=False, start_late_exag_iter: int=-1, late_exag_coeff: float=-1, 
            mom_switch_iter: int=250,momentum: float=0.5, final_momentum: float=0.8, learning_rate: int=200, n_trees: int=50, search_k: int=-1,
-           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50,load_affinities: int=0, nthreads:  int=0) -> np.ndarray:
+           nterms: int=3, intervals_per_integer: float=1, min_num_intervals: int=50,load_affinities: int=0, nthreads:  int=0, df: float=1.0) -> np.ndarray:
     """
     Wrapper around the Linderman et al. 2017 FItSNE C implementation
 
@@ -79,6 +79,13 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
        Number of threads to be used in computation of input similarities (both
        for vptrees and ann). 0 uses the maximum number of threads supported by
        the hardware.
+   df: float, default=0 
+       Degree of freedom of t-distribution, must be greater than 0.
+       Values smaller than 1 correspond to heavier tails, which can often 
+       resolve substructure in the embedding. See Kobak et al. (2019) for
+       details. 
+
+       
 
     Returns
     -------
@@ -115,6 +122,6 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
              momentum,final_momentum,learning_rate,K, sigma,
              nbody_algo, knn_algo, early_exag_coeff, costs, no_momentum_during_exag_i,
              start_late_exag_iter, late_exag_coeff, n_trees, search_k, 
-             nterms, intervals_per_integer, min_num_intervals,nthreads)
+             nterms, intervals_per_integer, min_num_intervals,nthreads, df)
 
     return Y
