@@ -47,9 +47,9 @@ def FItSNE(X: np.ndarray, no_dims: int=2, perplexity: float=30.0,
         Number of iterations of t-SNE to run.
     stop_early_exag_iter: int, default=250
         When to switch off early exaggeration.
-    fft_not_bh: bool, default=False
+    fft_not_bh: bool, default=True
         If theta is nonzero, this determins whether to use FIt-SNE or Barnes Hut approximation. 
-    ann_not_vptree: bool, default=False
+    ann_not_vptree: bool, default=True
         This determines whether to use aproximate (Annoy) or deterministic (vptree) nearest neighbours
     early_exag_coeff: float, default=12.0
         When to switch off early exaggeration. (>1)
